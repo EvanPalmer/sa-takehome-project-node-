@@ -21,6 +21,17 @@
           </div>
           <div class="mt-20 text-center text-secondary border-placeholder">
             Add Stripe Element here!
+
+              <script async
+                src="https://js.stripe.com/v3/buy-button.js">
+              </script>
+
+              <stripe-buy-button
+                buy-button-id="buy_btn_1QkynnFSYQio1CHoue0nUduD"
+                publishable-key="pk_test_51QkuCwFSYQio1CHoeN3Ijafdbnq2W08a969LrjuxOHla2D65wNYYs7CkVa8AhkD42ShBIbkYBr0C1qER8f8jrWOg00J5UjvAz4"
+              >
+              </stripe-buy-button>
+
           </div>
           <div class="mt-20">
             <button type="submit" class="btn btn-lg btn-block btn-primary">Pay $<span class="amount" data-amount="{{amount}}"></span></button>
