@@ -75,6 +75,7 @@ app.post('/create-checkout-session', async (req, res) => {
         quantity: 1, 
       },
     ], 
+    customer_email: req.body.email,
     mode: 'payment',
     success_url: `${YOUR_DOMAIN}/success`,
     cancel_url: `${YOUR_DOMAIN}/cancel`,
