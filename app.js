@@ -77,9 +77,9 @@ app.post('/create-checkout-session', async (req, res) => {
     ], 
     customer_email: req.body.email,
     mode: 'payment',
-    success_url: `${YOUR_DOMAIN}/success`,
-    cancel_url: `${YOUR_DOMAIN}/cancel`,
-});
+    success_url: `${YOUR_DOMAIN}/success?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${YOUR_DOMAIN}/cancel?session_id={CHECKOUT_SESSION_ID}`,
+}); 
 
   res.redirect(303, session.url);
 });
@@ -87,9 +87,15 @@ app.post('/create-checkout-session', async (req, res) => {
 /**
  * Success route
  */
-app.get('/success', function(req, res) {
-  res.render('success');
+app.get('/success', async(req, res) => {
+
+    const session = await stripe.checkout.sessions.retrieve(req.query.session_id);
+    // const customer = await stripe.customers.retrieve(session.customer);
+    const lineItems = await stripe.checkout.sessions.listLineItems(req.query.session_id);
+
+    res.render('success',  { session : session, lineItems : lineItems } );
 });
+
 
 /**
  * Cancel route
