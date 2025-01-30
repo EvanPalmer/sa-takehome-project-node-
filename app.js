@@ -6,6 +6,7 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const YOUR_DOMAIN = 'http://localhost:3000';
 
 var app = express();
+app.use(express.static('public'));
 
 // view engine setup (Handlebars)
 app.engine('hbs', exphbs({
@@ -68,34 +69,39 @@ app.get('/checkout', function(req, res) {
  */
 app.post('/create-checkout-session', async (req, res) => {
   const session = await stripe.checkout.sessions.create({
+    ui_mode: 'embedded',
     line_items: [
       {
-        // Provide the exact Price ID (for example, pr_1234) of the product you want to sell
         price: req.body.priceId,
-        quantity: 1, 
+        quantity: 1,
       },
-    ], 
-    customer_email: req.body.email,
+    ],
     mode: 'payment',
-    success_url: `${YOUR_DOMAIN}/success?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${YOUR_DOMAIN}/cancel?session_id={CHECKOUT_SESSION_ID}`,
-}); 
+    return_url: `${YOUR_DOMAIN}/success?session_id={CHECKOUT_SESSION_ID}`,
+  });
 
-  res.redirect(303, session.url);
+  res.send({clientSecret: session.client_secret});
+});
+
+app.get('/session-status', async (req, res) => {
+  const session = await stripe.checkout.sessions.retrieve(req.query.session_id);
+
+  res.send({
+    status: session.status,
+    customer_email: session.customer_details.email
+  });
 });
 
 /**
  * Success route
  */
 app.get('/success', async(req, res) => {
-
     const session = await stripe.checkout.sessions.retrieve(req.query.session_id);
     // const customer = await stripe.customers.retrieve(session.customer);
     const lineItems = await stripe.checkout.sessions.listLineItems(req.query.session_id);
 
     res.render('success',  { session : session, lineItems : lineItems } );
 });
-
 
 /**
  * Cancel route

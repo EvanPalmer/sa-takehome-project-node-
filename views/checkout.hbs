@@ -11,26 +11,14 @@
       <div class="mt-20 text-info">
         Total due: $<span class="amount" data-amount="{{amount}}"></span>
       </div>
-      <div class="mt-20 text-info">
-        Price ID: <span class="text"></span>
-      </div>
     </div>
     <div class="card box-shadow mt-40">
       <div class="card-body">
-        <form name="payment-form" action="/create-checkout-session" method="POST">
-          <div>
-            <label for="email">Email address</label>
-            <input type="email" class="form-control" id="email" name="email" placeholder="you@email.com" value="evan.palmer@gmail.com">
-            <input type="hidden" class="form-control" id="priceId" name="priceId"  value="{{priceId}}">
-          </div>
-          <div class="mt-20 text-center text-secondary border-placeholder">
-            Add Stripe Element here!
-              <button type="submit" class="btn btn-lg btn-block btn-primary">Pay $<span class="amount" data-amount="{{amount}}"></span></button>
-          </div>
-          <div class="mt-20">
-            <button type="submit" class="btn btn-lg btn-block btn-primary">Pay $<span class="amount" data-amount="{{amount}}"></span></button>
-          </div>
-        </form>
+        <div>
+          <input type="hidden" class="form-control" id="priceId" name="priceId"  value="{{priceId}}">
+        </div>
+        <div id="checkout" class="mt-20 text-center text-secondary border-placeholder">
+        </div>
       </div>
     </div>
   </div>
